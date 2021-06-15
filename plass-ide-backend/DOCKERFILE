@@ -1,4 +1,0 @@
-FROM gcc
-WORKDIR /app
-COPY ./run.sh .
-CMD ["bash", "./run.sh"]
