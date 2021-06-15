@@ -1,0 +1,54 @@
+.footer__contestpage{
+    background: #282828;
+    height: 30vh;
+    display: flex;
+    .wrapper{
+        width: 90%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        .col{
+            height: 100px;
+            width: 250px;
+            display: flex;
+            border: 1px solid #ccc;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            color: #282828;
+            flex-direction: column;
+            h4{
+                margin-top: 10px;
+            }
+        }
+        .col:hover{
+            height: 100px;
+            width: 250px;
+            display: flex;
+            border: 1px solid #ccc;
+            align-items: center;
+            justify-content: center;
+            background-color: #ededed;
+            color: #282828;
+            flex-direction: column;
+            h4{
+                margin-top: 10px;
+            }
+        }
+        .col:active{
+            height: 100px;
+            width: 250px;
+            display: flex;
+            border: 1px solid #ccc;
+            align-items: center;
+            justify-content: center;
+            background-color: #d3d3d3;
+            color: #282828;
+            flex-direction: column;
+            h4{
+                margin-top: 10px;
+            }
+        }
+    }
+}
