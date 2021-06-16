@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from 'react-router-dom';
 
 const Timer = (props, { mm, ss }) => {
-  const [minutes, setMinutes] = useState(parseInt(10));
+  const [minutes, setMinutes] = useState(parseInt(40));
   const [seconds, setSeconds] = useState(parseInt(0));
 
   useEffect(() => {
@@ -14,7 +14,12 @@ const Timer = (props, { mm, ss }) => {
         if (parseInt(minutes) === 0) {
             clearInterval(countdown);
             alert("시험이 종료되었습니다!")
-            props.history.push('/contestfinish')
+            props.history.push({
+              pathname: '/contestFinish',
+              state: {
+                  incorrect: null
+              }
+          })
         } else {
           setMinutes(parseInt(minutes) - 1);
           setSeconds(59);

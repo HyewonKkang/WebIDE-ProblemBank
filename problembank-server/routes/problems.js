@@ -111,7 +111,6 @@ router.get('/problemsdata', async function(req, res) {
     } catch (error) {
         console.log("Problems Data" + error)
     }
-    
 })
 
 //특정 문제의 정보를 출력함

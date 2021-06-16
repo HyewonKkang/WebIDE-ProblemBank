@@ -14,7 +14,7 @@ router.get('/logout', function(req, res){
   res.status(200);
   req.session.destroy(function(err){
     if(err){
-      console.log("Session detroy erros")
+      console.log("Session destroy erros")
     }else{
       res.redirect('/')
     }

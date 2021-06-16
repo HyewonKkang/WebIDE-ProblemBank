@@ -2,7 +2,7 @@ import React from 'react'
 import {Route, Switch, useRouteMatch} from 'react-router-dom';
 import ContestFinishPage from './pages/ContestFinishPage';
 
-function Contest(props) {
+function Contest() {
     const match = useRouteMatch();
     return (
         <Switch>

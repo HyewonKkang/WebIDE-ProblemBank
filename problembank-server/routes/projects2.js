@@ -11,6 +11,8 @@ router.post('/compile', async function(req, res){
     const { sourceCode, problemId, language } = req.body;
     const [testCases] = await db.query(sql.problems.selectTestCaseByProblemId, [problemId]);
     let correctCount = 0;
+    let incorrectNumber;
+    console.log(req.body)
     try {
         const promises = testCases.map(testcase => {
             return new Promise((resolve) => {
@@ -40,9 +42,14 @@ router.post('/compile', async function(req, res){
             });
         })
         
+        if (correctCount === testCases.length) { // 채점 결과 맞을때 incorrectNumber로 0 반환
+            incorrectNumber = 0;
+        } else {
+            incorrectNumber = problemId;
+        }
         res.status(200).send({
             result: true,
-            data:  { correctCount, count: testCases.length },
+            data:  { correctCount, count: testCases.length, incorrectNumber },
             message: 'compile success'
         })
     

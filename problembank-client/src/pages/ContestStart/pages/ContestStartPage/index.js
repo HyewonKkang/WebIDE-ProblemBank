@@ -12,24 +12,25 @@ import Loading from '../../../../components/Loading/Loading';
 import DetailProblemLayout from '../../../../layouts/DetailProblemLayout';
 import Timer from '../../components/Timer';
 var moment = require('moment');
+var submit_count = 0;
+var incorrectList = []; // 틀린 문제 번호 저장
 
 function DetailProblem(props) {
     const [problems, setProblems] = useState([])
-    const [problem, setProblem] = useState({})
+    let [problem, setProblem] = useState({})
     const {problemsAllData} = useSelector(state => state.problem);
 
     const [language, setLanguage] = useState("c")
     const [contentEditor, setContentEditor] = useState(SampleCode["c"])
     const [submit, setSubmit] = useState(false)
     const [theme, setTheme] = useState("white")
-    
+    const [code, setCode] = useState(false)
+
     const dispatch = useDispatch();
     
     const [loading, setLoading] = useState(true)
-    const [show, setShow] = useState(false);
     var id;
     //const { id } = queryString.parse(props.location.search);
-    
     useEffect(() => {
         if(problemsAllData){
             const { data }  = problemsAllData;
@@ -105,9 +106,7 @@ function DetailProblem(props) {
                 const [ problem ] = data.filter(element =>Number(element.id) === Number(id))
 
                 setProblem(problem)
-                console.log(problem)
                 setProblems(problems)
-                console.log(problems)
                 setLoading(false)
                
             })
@@ -117,45 +116,68 @@ function DetailProblem(props) {
     const handleEditorChange = (env, value) => {
         setContentEditor(value)
     }
-    
+
+    const passParameter =  () => {
+        props.history.push({
+            pathname: '/contestFinish',
+            state: {
+                incorrect: incorrectList
+            }
+        })
+
+    }
+
     //submit content editor & problem
     const onSubmit = async () => {
         try {
-    
+            submit_count += 1;
+
             setSubmit(true);
                         
-            const problemId = queryString.parse(window.location.search).id;
+            //const problemId = queryString.parse(window.location.search).id;
+            const problemId = problem.id;
 
-            id = problems[problems.indexOf(problem)+1].id
-            console.log(id)
-            
             // const IO_URL = process.env.REACT_APP_SERVER_API + "/projects";
-            
-            setProblem(problem)
-            console.log(problem)
-            
+
             const params = {
                 sourceCode: contentEditor,
                 language,
                 problemId: Number(problemId)
             }
-    
+
             const response = await projectsAPI.compile(params); 
             
             const { data } = response;
-            
+            incorrectList.push(data.incorrectNumber);
+            console.log(data.incorrectNumber)
+
             var timeOutSubmit = function(){
-                alert(`체점 결과 ${data.correctCount} / ${data.count}`);
+                alert(`채점 결과 ${data.correctCount} / ${data.count}`);
+                setCode(true)
+                if (submit_count === 10) {
+                    console.log("결과!:",incorrectList)
+                    alert("시험이 종료되었습니다!")
+                    
+                    passParameter();
+                    return;
+                }
                 setSubmit(false);
-            };
-            setTimeout(timeOutSubmit, 1000);
+                setContentEditor(SampleCode["c"])
+                id = problems[problems.indexOf(problem)+1].id
+            
+                var arr = problems.filter(element =>Number(element.id) === Number(id))
+                problem = arr[0]
+
+                setProblem(problem)
+                };
+                setCode(0)
+                setTimeout(timeOutSubmit, 1000);
             
         } catch (error) {
             setSubmit(false);
             alert("서버오류입니다. 잠시 후 다시 시도해주세요.");
             console.log(error)
         }
-
     }
 
     const handleProblemToList = async (id) => {
@@ -184,7 +206,7 @@ function DetailProblem(props) {
     }
 
     if(loading){
-        return <Loading  type={'bars'} color={'black'}  />
+        return <Loading type={'bars'} color={'black'}  />
     }
 
     return (
@@ -236,7 +258,7 @@ function DetailProblem(props) {
                         </div>
                     </div>
                     <div className="tab__footer">
-                        <div className="pre-next-problem">
+                        {/* <div className="pre-next-problem">
                             {
                                 problems.length !== 0 ?
                                     <>
@@ -247,7 +269,7 @@ function DetailProblem(props) {
                                 : ""
                                 
                             }
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <div className="problem__detail--vseditor">

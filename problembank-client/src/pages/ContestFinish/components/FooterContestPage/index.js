@@ -18,9 +18,7 @@ function FooterMainPage({history}) {
     return (
         <div className="footer__contestpage">
             <div className="wrapper">
-                <button className="col" onClick={() => {history.push("/conteststart")}}>
-                    <h2>경진대회 시작하기</h2>
-                </button>
+                
             </div>
         </div>
     )
