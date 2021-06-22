@@ -11,13 +11,11 @@ router.post('/compile', async function(req, res){
     const { sourceCode, problemId, language } = req.body;
     const [testCases] = await db.query(sql.problems.selectTestCaseByProblemId, [problemId]);
     let correctCount = 0;
-    let incorrectNumber;
     console.log(req.body)
     try {
         const promises = testCases.map(testcase => {
             return new Promise((resolve) => {
                 const docker = compiler.getProblemDocker(sourceCode, language);
-
                 let isStarted = false;
                 docker.stderr.on("data", (data) => {
                     console.log(data.toString('utf-8'));
@@ -26,7 +24,7 @@ router.post('/compile', async function(req, res){
                 docker.stdout.on("data", (data) => {
                     if(!isStarted) return;
                     const line = data.toString('utf-8');
-                    if(line.includes(testcase.output)) correctCount++;
+                    if(line.includes(testcase.output)) {correctCount++; console.log("맞은개수: ", correctCount)}
                 })
     
                 docker.stdout.on("data", (data) => {
@@ -47,13 +45,15 @@ router.post('/compile', async function(req, res){
         } else {
             incorrectNumber = problemId;
         }
+        
         res.status(200).send({
             result: true,
             data:  { correctCount, count: testCases.length, incorrectNumber },
             message: 'compile success'
         })
-    
+
         for(let i = 0 ; i < promises.length; i++) { await promises[i] } // TODO: recfectoring this
+
     } catch (error) {
         console.log(error)
         res.status(404).send({

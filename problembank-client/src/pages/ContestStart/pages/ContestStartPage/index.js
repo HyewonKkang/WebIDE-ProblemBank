@@ -162,7 +162,7 @@ function DetailProblem(props) {
                     return;
                 }
                 setSubmit(false);
-                setContentEditor(SampleCode["c"])
+                setContentEditor(SampleCode[document.getElementById("lang").value])
                 id = problems[problems.indexOf(problem)+1].id
             
                 var arr = problems.filter(element =>Number(element.id) === Number(id))
@@ -277,7 +277,7 @@ function DetailProblem(props) {
                         <ul>
                             <li>
                                 <span>언어 </span>
-                                <select name="" id="" className="language" value = {language} onChange={e => { setLanguage(e.target.value); setContentEditor(SampleCode[e.target.value])}}>
+                                <select name="" id="lang" className="language" value = {language} onChange={e => { setLanguage(e.target.value); setContentEditor(SampleCode[e.target.value])}}>
                                     <option value="c">C</option>
                                     <option value="cpp">C++</option>
                                     <option value="java">Java</option>
